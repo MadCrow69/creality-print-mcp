@@ -1,0 +1,52 @@
+[project]
+name = "creality-print-mcp"
+version = "0.1.0"
+description = "MCP server to read, audit and edit Creality Print (and OrcaSlicer / Bambu Studio) presets and to inspect, scale and rotate 3D models."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Diego O. Antunes" }]
+requires-python = ">=3.10"
+keywords = ["mcp", "model-context-protocol", "3d-printing", "creality", "creality-print", "orcaslicer", "bambu-studio", "slicer", "ender-3"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Printing",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
+dependencies = [
+    "mcp>=2.3,<3",
+    "trimesh>=4.6",
+    "numpy>=1.26",
+    "lxml>=5",       # .3mf loading/export in trimesh
+    "networkx>=3",   # .3mf scene graphs in trimesh
+]
+
+[project.urls]
+Homepage = "https://github.com/MadCrow69/creality-print-mcp"
+Issues = "https://github.com/MadCrow69/creality-print-mcp/issues"
+
+[project.scripts]
+creality-print-mcp = "creality_print_mcp.server:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/creality_print_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
