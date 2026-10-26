@@ -125,7 +125,7 @@ class ProfileStore:
     def profile_path(self, name: str, profile_type: str = "process") -> Path:
         if profile_type not in PROFILE_TYPES:
             raise ProfileError(f"Invalid profile_type '{profile_type}'. Use one of: {', '.join(PROFILE_TYPES)}")
-        if not name or name in (".", "..") or os.path.basename(name) != name or "/" in name:
+        if not name or name in (".", "..") or "/" in name or "\\" in name:
             raise ProfileError(f"Invalid preset name: '{name}'")
         return self.user_dir / profile_type / f"{name}.json"
 
