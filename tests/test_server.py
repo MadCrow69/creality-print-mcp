@@ -33,7 +33,7 @@ def test_stdio_end_to_end(config_dir, tmp_path):
             assert tools["set_profile_parameter"].annotations.destructive_hint is True
 
             audit = json.loads(_text(await session.call_tool("audit_profile", {"name": "My Profile"})))
-            assert audit["finding_count"] == 5
+            assert audit["finding_count"] == 4
 
             edit = json.loads(_text(await session.call_tool(
                 "set_profile_parameter", {"name": "My Profile", "key": "outer_wall_speed", "value": "60"})))

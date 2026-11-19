@@ -14,7 +14,7 @@ Creality Print is a fork of OrcaSlicer, which is a fork of Bambu Studio, and all
 |---|---|
 | `list_profiles` | Lists your process, filament and machine presets, each with the preset it inherits from |
 | `get_profile` | Returns a preset's **effective** settings, following the full `inherits` chain to the vendor preset (or only your overrides) |
-| `audit_profile` | Flags common causes of failed prints: crossing infill hit by the nozzle, supports fusing to or scarring the part, wall bulges, rough supported surfaces. Says whether each value is yours or inherited |
+| `audit_profile` | Flags common causes of failed prints: crossing infill hit by the nozzle, supports fusing to or scarring the part, supports too hard to remove (concentric or near-solid interface, rigid tree branches), wall bulges. Says whether each value is yours or inherited |
 | `set_profile_parameter` | Changes one setting, with an automatic backup. Keeps list fields as lists, refuses unknown keys (typos) and identity keys |
 | `list_backups` / `restore_backup` | Undo any edit |
 | `get_model_dimensions` | Size (X/Y/Z mm), volume, watertightness and face count of `.stl`, `.obj`, `.3mf` |
@@ -62,6 +62,10 @@ Add an environment variable to the entry above:
 ```json
 "env": { "SLICER": "orca" }
 ```
+
+### Agent skill (optional)
+
+[`skills/creality-print/SKILL.md`](skills/creality-print/SKILL.md) teaches the agent when to use these tools and how to diagnose a print problem with them. It covers which preset holds each setting, what the audit does not cover, and asking before editing. For Claude Code, copy the folder to `~/.claude/skills/`; other agents that read `SKILL.md` use their own skills folder. The skill needs the MCP server installed.
 
 ## Configuration
 

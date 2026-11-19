@@ -11,7 +11,8 @@ SUPPORT_TOP_Z_MAX_FACTOR = 1.2  # × layer height
 SUPPORT_TOP_Z_MIN_FACTOR = 0.8  # × layer height
 SUPPORT_XY_MIN_MM = 0.5
 WALL_OVERLAP_MAX_PCT = 30
-INTERFACE_SPACING_MAX_MM = 0.5
+# Below this the top interface is near solid (0 = solid) and bonds to the part. Vendor default is 0.5 mm.
+INTERFACE_SPACING_MIN_MM = 0.3
 
 
 def audit(profile: ResolvedProfile) -> list[dict[str, Any]]:
@@ -62,10 +63,27 @@ def audit(profile: ResolvedProfile) -> list[dict[str, Any]]:
                f"A {overlap:g}% overlap pushes excess plastic into the outer wall, creating bulges and ripples.",
                "Reduce it to 15-20%.")
 
+    if p.get("support_interface_pattern") == "concentric":
+        report("MEDIUM", "Support removal", "support_interface_pattern",
+               "A concentric interface prints closed rings under the part; they grip it as one shell and the "
+               "support has to be pried or cut off, sometimes breaking thin features.",
+               "Switch to 'rectilinear' (or 'auto'): straight lines peel off in strips.")
+
     spacing = to_number(p.get("support_interface_spacing"))
-    if spacing is not None and spacing >= INTERFACE_SPACING_MAX_MM:
-        report("LOW", "Supported surface finish", "support_interface_spacing",
-               f"A {spacing}mm interface spacing leaves gaps and an uneven supported surface.",
-               "Reduce it to 0.2mm and use the 'concentric' interface pattern; the support peels off as one shell.")
+    if spacing is not None and spacing < INTERFACE_SPACING_MIN_MM:
+        state = "A solid interface" if spacing == 0 else f"A {spacing}mm interface spacing"
+        report("MEDIUM", "Support removal", "support_interface_spacing",
+               f"{state} makes the contact layer almost solid; it bonds to the part like a "
+               "wall and is very hard to remove.",
+               "Use 0.5mm (vendor default). Go down to 0.3-0.4mm only if the supported surface is too rough, "
+               "accepting harder removal.")
+
+    support_type = str(p.get("support_type") or "")
+    walls = to_number(p.get("tree_support_wall_count"))
+    if support_type.startswith("tree") and walls is not None and walls >= 2:
+        report("LOW", "Support removal", "tree_support_wall_count",
+               f"{walls:g} walls on every tree branch make rigid trunks that resist snapping off and lever "
+               "against the part.",
+               "Set it to 0 (auto: double walls only on thick branches).")
 
     return findings

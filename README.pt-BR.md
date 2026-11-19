@@ -14,7 +14,7 @@ O Creality Print é um fork do OrcaSlicer, que por sua vez é fork do Bambu Stud
 |---|---|
 | `list_profiles` | Lista seus perfis de processo, filamento e máquina, com o perfil de origem de cada um |
 | `get_profile` | Devolve os valores **efetivos** do perfil, seguindo toda a cadeia `inherits` até o perfil do fabricante (ou só o que você alterou) |
-| `audit_profile` | Aponta causas comuns de falha: infill cruzado batendo no bico, suporte fundindo ou marcando a peça, parede ondulada, superfície ruim sob o suporte. Informa se cada valor é seu ou herdado |
+| `audit_profile` | Aponta causas comuns de falha: infill cruzado batendo no bico, suporte fundindo ou marcando a peça, suporte difícil de remover (interface concêntrica ou quase sólida, galhos de árvore rígidos), parede ondulada. Informa se cada valor é seu ou herdado |
 | `set_profile_parameter` | Altera um parâmetro com backup automático. Mantém campos em lista como lista e recusa chaves inexistentes (erro de digitação) e chaves de identidade |
 | `list_backups` / `restore_backup` | Desfaz qualquer alteração |
 | `get_model_dimensions` | Tamanho (X/Y/Z mm), volume, malha fechada e faces de `.stl`, `.obj`, `.3mf` |
@@ -62,6 +62,10 @@ Adicione à entrada acima:
 ```json
 "env": { "SLICER": "orca" }
 ```
+
+### Skill para o agente (opcional)
+
+[`skills/creality-print/SKILL.md`](skills/creality-print/SKILL.md) ensina o agente quando usar estas ferramentas e como diagnosticar um problema de impressão com elas. Cobre em qual perfil fica cada parâmetro, o que o audit não cobre e a regra de perguntar antes de editar. No Claude Code, copie a pasta para `~/.claude/skills/`; outros agentes que leem `SKILL.md` usam a própria pasta de skills. A skill depende do servidor MCP instalado.
 
 ## Configuração
 

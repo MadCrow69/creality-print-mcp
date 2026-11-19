@@ -33,8 +33,17 @@ def config_dir(tmp_path: Path) -> Path:
             "top_bottom_infill_wall_overlap": "30%"})
     _write(user / "Clean.json",
            {"name": "Clean", "inherits": PARENT, "sparse_infill_pattern": "gyroid", "support_top_z_distance": "0.2",
-            "support_object_xy_distance": "0.55", "support_interface_spacing": "0.2",
-            "top_bottom_infill_wall_overlap": "15%"})
+            "support_object_xy_distance": "0.55", "support_interface_spacing": "0.5",
+            "top_bottom_infill_wall_overlap": "15%", "support_type": "tree(auto)", "tree_support_wall_count": "0",
+            "support_interface_pattern": "rectilinear"})
+    # Clean except for settings that weld the support to the part.
+    _write(user / "Hard To Remove.json",
+           {"name": "Hard To Remove", "inherits": "Clean", "support_interface_pattern": "concentric",
+            "support_interface_spacing": "0.2", "tree_support_wall_count": "2"})
+    # Normal (grid) supports ignore tree_support_wall_count.
+    _write(user / "Normal Supports.json",
+           {"name": "Normal Supports", "inherits": "Hard To Remove", "support_type": "normal(auto)",
+            "support_interface_pattern": "rectilinear", "support_interface_spacing": "0"})
     _write(user / "Orphan.json", {"name": "Orphan", "inherits": "missing parent"})
     _write(user / "Ambiguous.json", {"name": "Ambiguous", "inherits": "fdm_process_common"})
     (root / "user" / "default" / "process").mkdir(parents=True)

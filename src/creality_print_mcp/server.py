@@ -90,7 +90,8 @@ def get_profile(name: str, profile_type: ProfileType = "process", resolve_inheri
 @mcp.tool(annotations=READ_ONLY)
 def audit_profile(name: str) -> dict[str, Any]:
     """Audit a process preset's EFFECTIVE values (inheritance resolved) for common causes of failures:
-    nozzle hitting crossing infill, supports fusing to or scarring the part, wall bulges, rough supported surfaces."""
+    nozzle hitting crossing infill, supports fusing to or scarring the part, supports too hard to remove
+    (concentric or near-solid interface, rigid tree branches), wall bulges."""
     resolved = _run(_store().resolve, name, "process")
     findings = audit(resolved)
     return {
